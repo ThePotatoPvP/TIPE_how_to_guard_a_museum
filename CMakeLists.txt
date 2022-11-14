@@ -5,8 +5,10 @@ set(CMAKE_C_STANDARD 23)
 
 include_directories(.)
 
-add_executable(TIPE_how_to_guard_a_museum
+add_executable(tipe
         code.c
         code.h
         geometry.c
-        geometry.h)
+        geometry.h operator.c operator.h)
+
+target_link_libraries(tipe X11)
