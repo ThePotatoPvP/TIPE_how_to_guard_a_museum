@@ -1,0 +1,171 @@
+\documentclass[12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{accents}
+\usepackage{stmaryrd}
+\usepackage[margin=25mm]{geometry}
+\usepackage[french]{babel}
+
+
+
+\setlist[enumerate,1]{label=\arabic*)}
+\setlist[enumerate,2]{label=\alph*)}
+
+
+\date{\today}
+\author{Corentin Sallin}
+\title{TIPE}
+
+
+
+\renewcommand{\theenumi}{\Alph{enumi}}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\primes}{\mathbb{P}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\Diag}{\mathcal{D}}
+\newcommand{\curlyv}{\mathcal{V}}
+
+
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\mnr}{\mathcal{M}_n(\R)}
+\newcommand{\mnk}{\mathcal{M}_n(\K)}
+\newcommand{\glnr}{\mathrm{GL}_n(\R)}
+\newcommand{\glnk}{\mathrm{GL}_n(\K)}
+\newcommand{\ps}{\mathcal{P}} % Power set
+
+\newcommand{\D}{\mathop{}\!\mathrm{d}}
+\newcommand{\ds}{\displaystyle}
+\newcommand*{\ensemble}[3][]{#1\{ #2 \mid #3 #1\}}
+\newcommand{\ab}{\mathopen{]}a,b\mathclose{[}}
+\newcommand{\Vvert}{\vert\kern-0.25ex\vert\kern-0.25ex\vert}
+\newcommand{\tnorm}[1]{\Vvert #1 \Vvert}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Isom}{Isom}
+\DeclareMathOperator{\Tr}{Tr}
+
+
+\theoremstyle{definition}
+\newtheorem{exo}{Exercice}
+\newtheorem{q}{Question}[exo]
+
+\newtheorem{theorem}{Théorème}
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{definition}[theorem]{Définition}
+\newtheorem*{corollary}{Corollaire}
+
+\newtheorem*{proposition}{Proposition}
+\newtheorem*{remark}{Remarque}
+\newtheorem*{example}{Exemple}
+
+\begin{document}
+
+\begin{titlepage} %Personnaliser la page de présentation
+    \begin{center}
+        
+            \textsc{ \LARGE{\textbf{T}ravail d'\textbf{I}nitiative \textbf{P}ersonnel \textbf{E}ncadré\\}}
+        \textnormal{\LARGE{CPGE MP2I-MPI\\}}
+        \vspace{6.5cm}
+        \textsl{\Huge{Problème du collectionneur d'art et extension au cadre
+        de la surveillance d'une ville}}\\
+        \vspace{6cm}
+        \textnormal{\Large{\bf Corentin SALLIN\\}}
+    \end{center}
+    \footnotetext{Problème original posé par V. Klee en 1973}
+\end{titlepage}
+
+\section*{Problème}
+
+On se donne un polygône à  \(n\) sommets, quel est le nombre minimum de points 
+à partir desquels on peut voir tout point de l'intérieur du polygône.
+
+Le cas du musée peut s'étendre à celui de la surveillance d'une ville en considérant 
+des polygônes avec des trous, coupant la visibilité du garde.
+
+
+\section*{Liste de choses à faire}
+
+\begin{enumerate}[\(\hookrightarrow\)]
+    \item Se familiariser avec le vocabulaire utilisé dans les documents
+    \item Etude de la décomposition de polygônes \cite{Lubiw,star,Chatal}
+    \item Etude des différentes preuves du théorème de Chvátal \cite{Fisk}
+    \item Etude des algorithmes déjà existants répondant au problème \cite{Aggarwal,star,Couto}
+    \item Implémentation de ces algorithmes, tests avec étude statistique.
+    \item Extension au modèle d'une ville, un polygône ayant des trous,
+    vaguement abordé dans \cite{Aggarwal,Aldo}
+\end{enumerate}
+
+\begin{theorem}(de Chvátal)
+    Soit \(S\) un polygône à \(n\) sommets, il existe un ensemble \(T\) d'au 
+    plus \(\left\lfloor \dfrac{n}{3} \right\rfloor\) points de \(S\) tel que 
+    pour tout point \(p \in S\) il existe un point \(q \in T\) tel que le segment 
+    \(pq\) est compris dans \(S\).
+    
+\end{theorem}
+
+\begin{center}
+    Ce problème est équivalent à 3-SAT \cite{Aldo,Krohn}
+\end{center}
+
+Mon étude se porte surtout sur le cas du polygône avec des trous, plus 
+prôche du cadre de la ville. Il faut donc différencier le cas des gardes de mur 
+et des gardes intérieurs comme cités dans \cite{Aldo}. Je chercherai ici à surveiller 
+tout l'intérieur est non seulement les parois comme on pourrait le faire dans 
+un musée.
+
+\begin{thebibliography}{100}
+    
+    \addtolength{\leftmargin}{0.2in} % Pour aligner avec la ligne suivante
+    \setlength{\itemindent}{-0.2in}
+
+    \bibitem{Aggarwal} A. Aggrawal, \textsl{The art gallery theorem: It's variations,
+    applications, and algorithmic speed}, thèse, Université Johns Hopkins, 1984
+
+    \bibitem{Aldo} A. Laurentini, \textsl{Guarding the walls of an art gallery},
+    pp 265-278, 1999
+
+    \bibitem{Lubiw} A. Lubiw, "Decomposing polygonal regions into convex 
+    quarilaterals" \textsl{Proc 1st ACM Symposium on Computational Geometry},
+    pp 97-106, 1985
+
+    \bibitem{star} G. T. Toussaint, D. Avis, "An efficient algorithm for 
+    decomposing a polygon into star-shaped polygon"\textsl{Pattern Recognition}, 
+    pp 395-398, 1981
+
+    \bibitem{Krohn} Krohn, A. Erik, J. Bengt "Approximate guarding of 
+    monotone and rectilinear polygon" \textsl{Algorithmica}, pp 564-594, 2013
+
+    \bibitem{Divine} M. Aigner, G. M. Ziegler, \textsl{Proofs from THE BOOK}  
+    (4th ed), pp 231-234, Chapter 35, 2009
+
+    \bibitem{Couto} M. Couto, P. de Rezende, C. de Souza, \textsl{An exact algorithm
+    for minimizing vertex guards on art galleries}, pp 425-448, 2011
+
+    \bibitem{valtr} P. Valtr, "Guarding galleries where no point sees a small 
+    area" \textsl{Israel Journal of Mathematics}, pp 1-16, 1998
+    
+    \bibitem{Fisk} S. Fisk, "A short proof of Chvátal's watchman theorem" 
+    \textsl{Journal of Combinatorial Thoery, Series B}, pp 324, 1978
+
+    \bibitem{Chatal} V. Chvátal, "A combinatorial theorem in plane geometry" 
+    \textsl{Journal of Combinatorial geometry, Series B}, pp 39-41, 1975
+
+\end{thebibliography}
+
+\end{document}
