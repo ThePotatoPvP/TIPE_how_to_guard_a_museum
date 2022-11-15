@@ -27,7 +27,3 @@ int has_common_Point(Link l1, Link l2){
 Link reversed_Link(Link l){
     return (Link){l.p2, l.p1};
 }
-
-int main(){
-    return;
-}
