@@ -9,6 +9,6 @@ add_executable(tipe
         code.c
         code.h
         geometry.c
-        geometry.h operator.c operator.h)
+        geometry.h operator.c operator.h structures.c structures.h)
 
-target_link_libraries(tipe X11)
+target_link_libraries(tipe X11 m)
