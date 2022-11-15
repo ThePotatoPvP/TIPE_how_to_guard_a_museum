@@ -3,7 +3,7 @@
 
 ### Ce travail de recherche est effectué dans un cadre scolaire  
 
-On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppose un musée, combien de gardes immobiles sont nécessaires afin de surveiller la moindre partie du musée. On prendra ainsi des polygones symples, donc la forme peut être quelconque. Pour cela on utilise des polygones générés aléatoirement, les exemples seront donc tous sur des polygones distincts.
+On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppose un musée et on se demande combien de gardes immobiles sont nécessaires afin de le surveiller. On prendra ainsi des polygones simples, donc la forme peut être quelconque. Pour cela on utilise des polygones générés aléatoirement, les exemples seront donc tous sur des polygones distincts.
 
 
 
@@ -22,7 +22,7 @@ On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppo
 
 ![image](./ressources/example_hemispheres.png)
 
-- Cet méthode a pour avantage d'être très simpleà implémenter et a une complexité en $O(n\log n)$ cependant au delà de $20$ côtés les polygones ont tous une forme semblable, une sorte de peigne haut et vers le bas, c'est ce qui nous a motivé à voir une deuxième approche pour construire les polygones. 
+- Cet méthode a pour avantage d'être très simple à implémenter et a une complexité en $O(n\log n)$ cependant au delà de $20$ côtés les polygones ont tous une forme semblable, une sorte de peigne haut et vers le bas, c'est ce qui nous a motivé à voir une deuxième approche pour construire les polygones. 
 
 2. Parcours de Graham et grignottage
     - On commence par cherche l'eveloppe convexe du nuage de points
