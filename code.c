@@ -4,11 +4,12 @@
 #include <X11/Xlib.h>
 #include <time.h>
 #include "code.h"
+#include "geometry.h"
 
 #define MARGE 100
 #define SIZE 500
 #define POINTWIDTH 2
-#define NPOINTS 30
+#define NPOINTS 10
 //Le 0 0 est en haut à gauche
 //xD on est dans Z/nZ
 
@@ -21,8 +22,11 @@
 
 int isInside(Point p, Polygon poly){
     int myBool = 0;
+    Point dummy = {2*SIZE, SIZE/2};
     for(int i=0; i<poly.sides; i++){
-        myBool += lineInter(poly.links[i], (Link){p, (Point){2*SIZE,2*SIZE}});
+        if(lineInter(poly.links[i], (Link){p, dummy})){
+            myBool++;
+        }
     }
     return myBool%2;
 }
@@ -159,7 +163,7 @@ void emptyIn(Pile *pile1, Pile *pile2){
 int dubsExist(Point* p, int n){
     for(int i=0; i<n; i++){
         for(int j=0; j<i; j++){
-            if(samePoint(p[i],p[j])){return i;}
+            if(__equal_Points__(p[i],p[j])){return i;}
         }
     }
     return 0;
@@ -174,13 +178,9 @@ Point* noDubs(Point* p, int n){
     return p;
 }
 
-int samePoint(Point p1, Point p2){
-    return (p1.x == p2.x && p1.y == p2.y);
-}
-
 int getIndex(Point* points, Point p, int n){
     for(int i=0; i<n; i++){
-        if (samePoint(points[i], p)){return i;}
+        if (__equal_Points__(points[i], p)){return i;}
     }
     return -1;
 }
@@ -190,7 +190,7 @@ int ismem(Pile *pile, Point p){
     while (!(isEmpty(pile))){
         Point newp = depile(pile);
         empile(side, newp);
-        if (samePoint(newp, p)){
+        if (__equal_Points__(newp, p)){
             emptyIn(side, pile);
             free(side);
             return 1;
@@ -241,7 +241,6 @@ Link* makeLinks(Point* p,int n){
     for(int i=0; i<topi-1; i++){
         links[i+3+bottomi] = (Link){top[i], top[i+1]};
     }
-    printLinks(p,links, n);
     return links;
 }
 
@@ -254,38 +253,6 @@ int croisement(Link* l, int length){
             return 1;
         };
     };
-    return 0;
-}
-
-
-
-int onSegment(Point p, Link l){
-    return ((p.x >= min(l.p1.x,l.p2.x) && p.x <= max(l.p1.x,l.p2.x))
-            && (p.y >= min(l.p1.y,l.p2.y) && p.y <= max(l.p1.y,l.p2.y)));
-}
-
-int orientation(Point p1, Point p2, Point p3){
-    int val = (p2.y - p1.y)*(p3.x - p2.x)-(p2.x - p1.x)*(p3.y - p2.y);
-    if (val == 0){return 0;} // collinéaire
-    return (val > 0)? 1: 2;
-}
-
-int lineInter(Link l1, Link l2){
-    // On a intersection si et seulement si (l1,p2) et (l1.q2) ont une orientation différente
-    // aux indices près
-    int o1 = orientation(l1.p1,l1.p2,l2.p1);
-    int o2 = orientation(l1.p2,l1.p2,l2.p2);
-    int o3 = orientation(l2.p1,l2.p2,l1.p1);
-    int o4 = orientation(l2.p1,l2.p2,l1.p2);
-
-    if( o1 != o2 && o3!= o4){return 1;}
-
-    // Cas collinéaires où un point est sur l'autre segment
-    if (o1 == 0 && onSegment(l2.p1,l1)){return 1;}
-    if (o2 == 0 && onSegment(l2.p2,l1)){return 1;}
-    if (o3 == 0 && onSegment(l1.p1,l2)){return 1;}
-    if (o4 == 0 && onSegment(l1.p2,l2)){return 1;}
-
     return 0;
 }
 
@@ -314,25 +281,30 @@ int makeWindow(Polygon poly){
         if (e.type == Expose) {
             for(int i=0; i<n; i++){
                 XFillRectangle(d, w, DefaultGC(d, s), 
-                    MARGE+poly.points[i].x, 
-                    MARGE+poly.points[i].y, 
+                    MARGE+poly.points[i].x - POINTWIDTH, 
+                    MARGE+poly.points[i].y - POINTWIDTH, 
                     2*POINTWIDTH, 2*POINTWIDTH);
 
                 //char pd[2] = {i+97, '\0'};
                 //XDrawString(d, w, DefaultGC(d, s), MARGE+poly.points[i].x + 20, MARGE+poly.points[i].y + 20, pd, 1);
             
                 XDrawLine(d, w, DefaultGC(d, s), 
-                    MARGE+poly.links[i].p1.x+POINTWIDTH,
-                    MARGE+poly.links[i].p1.y+POINTWIDTH,
-                    MARGE+poly.links[i].p2.x+POINTWIDTH,
-                    MARGE+poly.links[i].p2.y+POINTWIDTH
+                    MARGE+poly.links[i].p1.x,
+                    MARGE+poly.links[i].p1.y,
+                    MARGE+poly.links[i].p2.x,
+                    MARGE+poly.links[i].p2.y
                 );
             };
-            if (isInside((Point){250,250}, poly)){
-                char* msg = "Center is inside";
-                XDrawString(d, w, DefaultGC(d, s), 10, 50, msg, strlen(msg));
+            XSetForeground(d, DefaultGC(d,s), 255<<16);
+            XFillRectangle(d, w, DefaultGC(d,s), MARGE+SIZE/2-POINTWIDTH, MARGE+SIZE/2-POINTWIDTH, 2*POINTWIDTH,2*POINTWIDTH);
+            char* msg;
+            Point middle = {250,250};
+            if (isInside(middle,poly)){
+                msg = "Center is inside";
+            } else {
+                msg = "Center is outside";
             }
-            //XDrawString(d, w, DefaultGC(d, s), 10, 50, msg, strlen(msg));
+            XDrawString(d, w, DefaultGC(d, s), MARGE+SIZE/3, MARGE*1.2+SIZE, msg, strlen(msg));
         }
         if (e.type == KeyPress)
             break;
@@ -361,21 +333,6 @@ void toFile(Polygon poly, int n){
     }
     fprintf(fp, "(a)[%d, %d]\n", poly.points[0].x, poly.points[0].y);
     fclose(fp);
-}
-
-int isSimplePolygon(Polygon poly, int n){
-    for(int i=0; i<n; i++){
-        for(int j=0; j<i; j++){
-            if (lineInter(poly.links[i],poly.links[j])){
-                printf("error on link %d\n",i);
-                printLinkLetter(poly.points, poly.links,i, n);
-                return 0;
-            }
-        }
-        printLinkLetter(poly.points, poly.links,i, n);
-        printf("is a clean link");
-    }
-    return 1;
 }
 
 Link* noLinks(Point* p, int n){
@@ -410,7 +367,6 @@ int main(void) {
 
 
     //int isSimple = isSimplePolygon(poly);
-
     makeWindow(poly);
     return 0;
 }
