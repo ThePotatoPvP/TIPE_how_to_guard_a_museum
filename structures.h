@@ -17,7 +17,11 @@ typedef struct LinkedList{
 
 Node* new_Node(void*);
 
+void free_Node(Node* node);
+
 LinkedList* new_LinkedList();
+
+void free_LinkedList(LinkedList* list);
 
 /**
  * Apply the function to_apply to each element of the list.
@@ -38,9 +42,18 @@ void apply_indexed_LinkedList(LinkedList* list, void (*to_apply_idx)(void* eleme
  * @param list a linked list
  * @param element the element to add
  * @param idx an index
- * @return true if the element was added and false otherwise
  */
-bool add_LinkedList(LinkedList* list, void* element, int idx);
+void add_LinkedList(LinkedList* list, void* element, int idx);
+
+/**
+ * Append an element at the end of the list.
+ *
+ * @param list the modified list
+ * @param element an element
+ */
+void append_LinkedList(LinkedList* list, void* element){
+    add_LinkedList(list, element, list->size);
+}
 
 /**
  * Prints the linked list using the given print function.
@@ -60,9 +73,6 @@ bool is_empty_LinkedList(LinkedList* list);
 
 /**
  * Deletes a node from the linked list and returns the deleted node.<p>
- * <i>This should be used to ensure the deletion of an element as NULL might be
- * a list entry but not a Node.
- * </i>
  *
  * @param list a linked list
  * @param idx the index
@@ -81,8 +91,6 @@ Node* pop_Node_LinkedList(LinkedList* list);
 
 /**
  * Deletes a node from the linked list, free it and returns the void* element.
- * Use with care as the deletion of an element is not ensured,
- * see remove_Node_LinkedList.
  *
  * @param list a linked list
  * @param idx the index
@@ -105,5 +113,47 @@ void concat_LinkedList(LinkedList* dst, LinkedList to_add);
  * @param list the modified list
  */
 void* pop_LinkedList(LinkedList* list);
+
+/**
+ * Sort the linked list in place using the given compare function.
+ * The compare function works as follow:
+ * (a,b) -> -1 if a < b
+ *       ->  1 if a > b
+ *       ->  0 if a = b
+ * @param list a linked list
+ * @param compare the compare function
+ */
+void sort_LinkedList(LinkedList* list, int (*compare)(void* element1, void* element2));
+
+/**
+ * Returns true if the given idx is a valid one.
+ */
+bool is_valid_idx_LinkedList(LinkedList* list, int i);
+
+/**
+ * Returns the Node at given index.
+ *
+ * @param list a linked list
+ * @param idx an index
+ * @return the wanted Node
+ */
+Node* get_Node_LinkedList(LinkedList* list, int idx);
+
+/**
+ * Returns the element at the given index.
+ * If the idx is invalid returns NULL.
+ *
+ * @param list
+ * @param idx
+ * @return the 'idx-th' element of the list
+ */
+void* get_LinkedList(LinkedList* list, int idx);
+
+/**
+ * Throws an error.
+ */
+void invalid_index_Error_LinkedList(LinkedList* list, int i);
+
+void* to_array_LinkedList(LinkedList* list);
 
 #endif
