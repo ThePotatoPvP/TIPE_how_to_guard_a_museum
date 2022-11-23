@@ -59,7 +59,7 @@ int lineInter(Link l1, Link l2){
     int o3 = orientation(l2.p1,l2.p2,l1.p1);
     int o4 = orientation(l2.p1,l2.p2,l1.p2);
 
-    if( o1 != o2 && o3!= o4){return 1;}
+    if( o1 != o2 && o3 != o4){return 1;}
 
     // Cas collinéaires où un point est sur l'autre segment
     if (o1 == 0 && onSegment(l2.p1,l1)){return 1;}
@@ -80,4 +80,28 @@ int isSimplePolygon(Polygon poly){
         }
     }
     return 1;
+}
+
+double double_abs(double d){
+    if (d>(double)0){
+        return d;
+    }
+    return (double)(-1)*d;
+}
+
+double angle_Points(Point p1, Point p2, Point p3){
+    double a_1 = atan((double)(p2.x-p1.x)/(double)(p2.y-p1.y));
+    double a_2 = atan((double)(p3.x-p1.x)/(double)(p3.y-p1.y));
+    return double_abs(a_2-a_1);
+}
+
+Point centroid(Point* points, int n){
+    int x, y;
+    int length = n;
+    for (int i=0; i<length; i++){
+        x += points[i].x;
+        y += points[i].y;
+    }
+    return (Point){x/length, y/length};
+
 }

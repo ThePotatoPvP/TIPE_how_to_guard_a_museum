@@ -78,19 +78,6 @@ void printLinksLetters(Point* p, Link* l, int n){
     }
 }
 
-void printPile(Pile *pile){
-    Pile *side = newPile();
-    printf("Voici la pile :\n");
-    while (!(isEmpty(pile))){
-        Point newp = depile(pile);
-        empile(side, newp);
-        printPoint(newp);
-    }
-    emptyIn(side, pile);
-    free(side);
-    printf("\n");
-}
-
 void printPath(Point* p, Link *l, int length){
     for(int i=0; i<length; i++){
         printPoint(l[i].p1);
@@ -104,53 +91,6 @@ void printPath(Point* p, Link *l, int length){
 
 int max(int n, int m){return (n>m)? n:m;}
 int min(int n, int m){return (n<m)? n:m;}
-
-
-
-///
-// Pile functions
-///
-
-
-
-Point depile(Pile *pile){
-    Point p;
-    Node *depiled = pile->head;
-
-    if (!(isEmpty(pile))){
-        p = depiled->p;
-        pile->head = depiled->next;
-        free(depiled);
-        pile->depth -= 1;
-    }
-    return p;
-}
-
-void empile(Pile *pile, Point p){
-    Node *new = malloc(sizeof(Node*));
-
-    new->p = p;
-    new->next = pile->head;
-    pile->head = new;
-    pile->depth += 1;
-}
-
-Pile* newPile(){
-    Pile *pile = malloc(sizeof(Pile*));
-    pile->head = NULL;
-    pile->depth = 0;
-}
-
-int isEmpty(Pile *pile){
-    return (pile->depth == 0);
-}
-
-void emptyIn(Pile *pile1, Pile *pile2){
-    Point p;
-    while (!(isEmpty(pile1))){
-        empile(pile2, depile(pile1));
-    };
-}
 
 
 
@@ -183,22 +123,6 @@ int getIndex(Point* points, Point p, int n){
         if (__equal_Points__(points[i], p)){return i;}
     }
     return -1;
-}
-
-int ismem(Pile *pile, Point p){
-    Pile *side = newPile();
-    while (!(isEmpty(pile))){
-        Point newp = depile(pile);
-        empile(side, newp);
-        if (__equal_Points__(newp, p)){
-            emptyIn(side, pile);
-            free(side);
-            return 1;
-        }
-    }
-    emptyIn(side, pile);
-    free(side);
-    return 0;
 }
 
 
@@ -276,11 +200,14 @@ int makeWindow(Polygon poly){
     XSelectInput(d, w, ExposureMask | KeyPressMask);
     XMapWindow(d, w);
 
+    XGCValues Polygon_values = {.foreground=BlackPixel(d, s), .background=WhitePixel(d, s)};
+    GC PolygonGC = XCreateGC(d, RootWindow(d, s), 0, &Polygon_values);
+
     while (1) {
         XNextEvent(d, &e);
-        if (e.type == Expose) {
+        if (e.type == Expose && e.xexpose.count==0) {
             for(int i=0; i<n; i++){
-                XFillRectangle(d, w, DefaultGC(d, s), 
+                XFillRectangle(d, w, PolygonGC, 
                     MARGE+poly.points[i].x - POINTWIDTH, 
                     MARGE+poly.points[i].y - POINTWIDTH, 
                     2*POINTWIDTH, 2*POINTWIDTH);
@@ -288,7 +215,7 @@ int makeWindow(Polygon poly){
                 //char pd[2] = {i+97, '\0'};
                 //XDrawString(d, w, DefaultGC(d, s), MARGE+poly.points[i].x + 20, MARGE+poly.points[i].y + 20, pd, 1);
             
-                XDrawLine(d, w, DefaultGC(d, s), 
+                XDrawLine(d, w, PolygonGC, 
                     MARGE+poly.links[i].p1.x,
                     MARGE+poly.links[i].p1.y,
                     MARGE+poly.links[i].p2.x,
@@ -343,6 +270,7 @@ Link* noLinks(Point* p, int n){
     }
     return linksList;
 }
+
 
 ///
 // main()

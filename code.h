@@ -4,18 +4,6 @@
 
 
 
-typedef struct Node{
-    Point p;
-    struct Node* next;
-} Node;
-
-typedef struct Pile{
-    Node* head;
-    int depth;
-} Pile;
-
-
-
 // Printers & basics
 
 
@@ -30,20 +18,7 @@ void printPoints(Point* p, int n);
 void printLinks(Point* p, Link* l, int n);
 void printLinkLetter(Point* p, Link* l, int i, int n);
 void printLinksLetters(Point* p, Link* l, int n);
-void printPile(Pile *pile);
 void printPath(Point* p, Link *l, int length);
-
-
-
-// Pile funcs
-
-
-
-Point depile(Pile *pile);
-void empile(Pile *pile, Point p);
-Pile* newPile();
-int isEmpty(Pile *pile);
-void emptyIn(Pile *pil1, Pile *pile2);
 
 
 
@@ -54,7 +29,6 @@ void emptyIn(Pile *pil1, Pile *pile2);
 int dubsExist(Point* p, int n);
 Point* noDubs(Point* p, int n);
 int getIndex(Point* points, Point p, int n);
-int ismem(Pile *pile, Point p);
 
 
 Point* makePoints(int n);
