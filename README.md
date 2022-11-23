@@ -20,7 +20,7 @@ On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppo
 
 [//]: # (Preuve de correction à mettre ici ?)
 
-![image](./ressources/example_hemispheres.png)
+![image](./src/resources/example_hemispheres.png)
 
 - Cet méthode a pour avantage d'être très simple à implémenter et a une complexité en $O(n\log n)$ cependant au delà de $20$ côtés les polygones ont tous une forme semblable, une sorte de peigne haut et vers le bas, c'est ce qui nous a motivé à voir une deuxième approche pour construire les polygones. 
 
