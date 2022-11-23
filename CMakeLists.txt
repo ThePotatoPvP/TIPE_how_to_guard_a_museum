@@ -6,9 +6,9 @@ set(CMAKE_C_STANDARD 23)
 include_directories(.)
 
 add_executable(tipe
-        code.c
-        code.h
-        geometry.c
-        geometry.h operator.c operator.h structures.c structures.h)
+        src/c_src/code.c
+        src/c_src/code.h
+        src/c_src/geometry.c
+        src/c_src/geometry.h src/c_src/operator.c src/c_src/operator.h src/c_src/structures.c src/c_src/structures.h)
 
 target_link_libraries(tipe X11 m)
