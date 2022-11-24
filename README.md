@@ -22,7 +22,7 @@ On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppo
 
 ![image](./src/resources/example_hemispheres.png)
 
-- Cet méthode a pour avantage d'être très simple à implémenter et a une complexité en $O(n\log n)$ cependant au delà de $20$ côtés les polygones ont tous une forme semblable, une sorte de peigne haut et vers le bas, c'est ce qui nous a motivé à voir une deuxième approche pour construire les polygones. 
+- Cet méthode a pour avantage d'être très simple à implémenter et a une complexité en $O(n\log n)$ cependant au delà de $20$ côtés les polygones ont tous une forme semblable, une sorte de peigne vers le haut et le bas, c'est ce qui nous a motivé à voir une deuxième approche pour construire les polygones. 
 
 2. Parcours de Graham et grignottage
     - On commence par cherche l'eveloppe convexe du nuage de points
