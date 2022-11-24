@@ -67,16 +67,6 @@ void printLinks(Point* p, Link* l, int n){
     }
 }
 
-void printLinkLetter(Point* p, Link* l,int i, int n){
-    printf("Link from (%c) to (%c)\n", letterFromInt(getIndex(p, l[i].p1, n))[0], letterFromInt(getIndex(p, l[i].p2, n))[0]);
-}
-
-void printLinksLetters(Point* p, Link* l, int n){
-    for(int i=0; i<n; i++){
-        printLinkLetter(p,l,i,n);
-    }
-}
-
 void printPath(Point* p, Link *l, int length){
     for(int i=0; i<length; i++){
         printPoint(l[i].p1);
@@ -116,13 +106,6 @@ LinkedList* noDubs(LinkedList* points){
         b = dubsExist(points);
     }
     return points;
-}
-
-int getIndex(Point* points, Point p, int n){
-    for(int i=0; i<n; i++){
-        if (__equal_Points__(points[i], p)){return i;}
-    }
-    return -1;
 }
 
 
@@ -167,18 +150,6 @@ LinkedList* makeLinks(LinkedList* points){
     }
 
     return links;
-}
-
-
-
-int croisement(Link* l, int length){
-    Link last = l[length-1];
-    for(int i=0; i<length-2; i++){
-        if (lineInter(last, l[i])){
-            return 1;
-        };
-    };
-    return 0;
 }
 
 
@@ -248,7 +219,7 @@ int makeWindow(Polygon poly){
 
 
 
-/*void toFile(Polygon poly){
+void toFile(Polygon poly){
 
     FILE *fp;
     char* filename = "polygons.txt";
@@ -256,14 +227,15 @@ int makeWindow(Polygon poly){
     fp = fopen(filename,"a+");
 
     for(int i=0; i<poly.sides; i++){
-        fprintf(fp, "(%c)[%d, %d] -- ",
-            letterFromInt(getIndex(poly.points, poly.links[i].p1, n))[0],
-            poly.links[i].p1.x, poly.links[i].p1.y);
+        Link cur = *(Link*)get_LinkedList(poly.links, i);
+        fprintf(fp, "[%d, %d] -- ",
+            cur.p1.x, cur.p1.y);
         
     }
-    fprintf(fp, "(a)[%d, %d]\n", poly.points[0].x, poly.points[0].y);
+    Point start = *(Point*)get_LinkedList(poly.points, 0);
+    fprintf(fp, "[%d, %d]\n", start.x, start.y);
     fclose(fp);
-}*/
+}
 
 Link* noLinks(Point* p, int n){
     Link* linksList = malloc(sizeof(Link)*n);
@@ -283,14 +255,11 @@ Link* noLinks(Point* p, int n){
 
 int main(void) {
     LinkedList* pointsList = makePoints(NPOINTS);
-    printf("les puntos sont finitos \n");
     pointsList = noDubs(pointsList);
-    printf("les puntos sont no doublos, j'en ai %i\n",pointsList->size);
     //printPoints(pointsList, NPOINTS);
 
     LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
     //Link* linksList = noLinks(pointsList, NPOINTS);   // make dummy links to analyse the dots
-    printf("las linkasas estas redatas\n");
     Polygon* poly = new_Polygon(pointsList, linksList);
 
     //toFile(pointsList, linksList, NPOINTS);
