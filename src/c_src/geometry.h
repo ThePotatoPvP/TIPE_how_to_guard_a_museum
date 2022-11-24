@@ -1,6 +1,8 @@
 #ifndef GEOMETRY
 #define GEOMETRY
 
+#include "operator.h"
+#include "structures.h"
 
 typedef struct Point{
     int x;
@@ -13,13 +15,17 @@ typedef struct Link{
 } Link;
 
 typedef struct Polygon{
-    Point* points;
-    Link* links;
+    LinkedList* points;
+    LinkedList* links;
     int sides;
 } Polygon;
 
 int max(int n, int m);
 int min(int n, int m);
+
+Point* new_Point(int x, int y);
+Link* new_Link(Point p1, Point p2);
+Polygon* new_Polygon(LinkedList* points, LinkedList* links);
 
 /**
  * Returns true if the two points have the same coordinates, false otherwise
@@ -47,7 +53,7 @@ int onSegment(Point p, Link l);
  * Returns the spinning way to go from point 1 to 3
  * 0 points are collinear
  * 1 if the rotation is clockwise
- * -1 if anti-clockwise
+ * 2 if anti-clockwise
  * @param p1 a Point
  * @param p2 a Point
  * @param p3 a Point

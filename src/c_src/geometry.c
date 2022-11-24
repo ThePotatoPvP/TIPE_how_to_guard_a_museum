@@ -1,5 +1,29 @@
 #include "geometry.h"
+#include "structures.h"
 #include <math.h>
+
+
+Point* new_Point(int x, int y){
+    Point* p = malloc(sizeof(p));
+    p->x = x;
+    p->y = y;
+    return p;
+}
+
+Link* new_Link(Point p1, Point p2){
+    Link *l = malloc(sizeof(Link*));
+    l->p1 = p1;
+    l->p2=p2;
+    return l;
+}
+
+Polygon* new_Polygon(LinkedList* points, LinkedList* links){
+    Polygon* poly = (Polygon*)malloc(sizeof(poly));
+    poly->points = points; 
+    poly->links = links;
+    poly->sides = links->size;
+    return poly;
+}
 
 double dst_Point(Point a, Point b){
     int delta_x = a.x - b.x;
@@ -52,14 +76,16 @@ int orientation(Point p1, Point p2, Point p3){
 }
 
 int lineInter(Link l1, Link l2){
-    // On a intersection si et seulement si (l1,p2) et (l1.q2) ont une orientation différente
-    // aux indices près
+    int det = (l1.p1.x-l1.p2.x)*(l2.p1.y-l2.p2.y)-(l1.p1.y-l1.p2.y)*(l2.p1.x-l2.p2.x);
+
     int o1 = orientation(l1.p1,l1.p2,l2.p1);
-    int o2 = orientation(l1.p2,l1.p2,l2.p2);
+    int o2 = orientation(l1.p1,l1.p2,l2.p2);
     int o3 = orientation(l2.p1,l2.p2,l1.p1);
     int o4 = orientation(l2.p1,l2.p2,l1.p2);
 
-    if( o1 != o2 && o3 != o4){return 1;}
+    if (det != 0 && o1 != o2 && o3 != o4){
+        return 1;
+    }
 
     // Cas collinéaires où un point est sur l'autre segment
     if (o1 == 0 && onSegment(l2.p1,l1)){return 1;}
@@ -68,8 +94,10 @@ int lineInter(Link l1, Link l2){
     if (o4 == 0 && onSegment(l1.p2,l2)){return 1;}
 
     return 0;
+
 }
 
+/*
 int isSimplePolygon(Polygon poly){
     int n = poly.sides;
     for(int i=0; i<n; i++){
@@ -81,7 +109,7 @@ int isSimplePolygon(Polygon poly){
     }
     return 1;
 }
-
+*/
 double double_abs(double d){
     if (d>(double)0){
         return d;
@@ -104,4 +132,11 @@ Point centroid(Point* points, int n){
     }
     return (Point){x/length, y/length};
 
+}
+
+LinkedList* convex_hull_2d(Point* p){
+    LinkedList *enveloppe = new_LinkedList();
+    Point left = p[0];
+    append_LinkedList(enveloppe, &left);
+    return enveloppe;
 }

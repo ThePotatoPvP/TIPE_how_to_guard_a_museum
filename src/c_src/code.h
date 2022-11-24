@@ -3,7 +3,6 @@
 #include "geometry.h"
 
 
-
 // Printers & basics
 
 
@@ -26,13 +25,13 @@ void printPath(Point* p, Link *l, int length);
 
 
 
-int dubsExist(Point* p, int n);
-Point* noDubs(Point* p, int n);
+int dubsExist(LinkedList* points);
+LinkedList* noDubs(LinkedList* points);
 int getIndex(Point* points, Point p, int n);
 
 
-Point* makePoints(int n);
-Link* makeLinks(Point* p,int n);
+LinkedList* makePoints(int n);
+LinkedList* makeLinks(LinkedList* points);
 
 int croisement(Link* l, int length);
 

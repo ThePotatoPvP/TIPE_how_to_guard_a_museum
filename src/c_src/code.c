@@ -24,7 +24,7 @@ int isInside(Point p, Polygon poly){
     int myBool = 0;
     Point dummy = {2*SIZE, SIZE/2};
     for(int i=0; i<poly.sides; i++){
-        if(lineInter(poly.links[i], (Link){p, dummy})){
+        if(lineInter(*(Link*)get_LinkedList(poly.links,i), (Link){p, dummy})){
             myBool++;
         }
     }
@@ -37,12 +37,11 @@ void swap(Point* p, int i, int j){
     p[i] = temp;
 }
 
-void sortPoints(Point* p, int n){
-    for(int i=n-1; i>0; i--){
-        for(int j=0; j<i; j++){
-            if (p[j+1].x < p[j].x){swap(p,j,j+1);}
-        }
-    }
+int compare_Points(void* p1, void* p2){
+    Point* _p1 = (Point*)p1;
+    Point* _p2 = (Point*)p2;
+    if (_p1->x == _p2->x){return 0;}
+    return (_p1->x > _p2->x)? -1: 1;
 }
 
 char* letterFromInt(int n){
@@ -100,22 +99,23 @@ int min(int n, int m){return (n<m)? n:m;}
 
 
 
-int dubsExist(Point* p, int n){
-    for(int i=0; i<n; i++){
+int dubsExist(LinkedList* points){
+    for(int i=0; i<points->size; i++){
         for(int j=0; j<i; j++){
-            if(__equal_Points__(p[i],p[j])){return i;}
+            if(__equal_Points__(*(Point*)get_LinkedList(points, i),*(Point*)get_LinkedList(points, j))){return i;}
         }
     }
     return 0;
 }
 
-Point* noDubs(Point* p, int n){
-    int b = dubsExist(p,n);
+LinkedList* noDubs(LinkedList* points){
+    int b = dubsExist(points);
     while (b){
-        p[b].x = (p[b].x+1) % (SIZE+1);
-        b = dubsExist(p,n);
+        Point* p = get_LinkedList(points, b);
+        p->x = (p->x+1) % (SIZE+1);
+        b = dubsExist(points);
     }
-    return p;
+    return points;
 }
 
 int getIndex(Point* points, Point p, int n){
@@ -127,44 +127,45 @@ int getIndex(Point* points, Point p, int n){
 
 
 
-Point* makePoints(int n){
+LinkedList* makePoints(int n){
     srand(time(NULL));
-    Point* p = malloc(sizeof(Point*)*n);
+    LinkedList* points = new_LinkedList();
     for(int i=0; i<n; i++){
-        p[i].x = rand() % (SIZE+1);
-        p[i].y = rand() % (SIZE+1);
+        Point* filler = new_Point(rand() % (SIZE+1), rand() % (SIZE+1)); 
+        append_LinkedList(points, filler);
     }
-    return p;
+    return points;
 }
 
-Link* makeLinks(Point* p,int n){
-    Link* links = malloc(sizeof(Link)*n);
-    sortPoints(p, n);
+LinkedList* makeLinks(LinkedList* points){
+    LinkedList* links = new_LinkedList();
+    sort_LinkedList(points, compare_Points);
 
-    Point left = p[0];
-    Point right = p[n-1];
+    Point* left = get_LinkedList(points, 0);
+    Point* right = get_LinkedList(points, points->size-1);
 
-    Point* top = malloc(sizeof(Point)*(n-2));
-    Point* bottom = malloc(sizeof(Point)*(n-2));
-    int bottomi = 0, topi = 0;
-    for(int i=1; i<(n-1); i++){
-        if (orientation(left, right, p[i]) == 1){
-            top[topi++] = p[i];
+    LinkedList* top = new_LinkedList();
+    LinkedList* bottom = new_LinkedList();
+
+    for(int i=1; i<(points->size-1); i++){
+        Point* current = get_LinkedList(points, i);
+        if (orientation(*left, *right, *current) == 1){
+            append_LinkedList(top, current);
         }else{
-            bottom[bottomi++] = p[i];
+            append_LinkedList(bottom, current);
         }
-    } // On a alors topi + bottomi = n-2
-    links[0] = (Link){left, bottom[0]};
-    links[1] = (Link){left, top[0]};
-    links[2] = (Link){right, top[topi-1]};
-    links[3] = (Link){right, bottom[bottomi-1]};
+    }
+    append_LinkedList(links, new_Link(*left, *(Point*)get_LinkedList(bottom, 0)));
+    append_LinkedList(links, new_Link(*left, *(Point*)get_LinkedList(top, 0)));
+    append_LinkedList(links, new_Link(*right, *(Point*)get_LinkedList(top, top->size-1)));
+    append_LinkedList(links, new_Link(*right, *(Point*)get_LinkedList(bottom, bottom->size-1)));
+    for(int i=1; i<bottom->size; i++){
+        append_LinkedList(links, new_Link(*(Point*)get_LinkedList(bottom,i-1), *(Point*)get_LinkedList(bottom,i)));
+    }
+    for(int i=1; i<top->size; i++){
+        append_LinkedList(links, new_Link(*(Point*)get_LinkedList(top,i-1), *(Point*)get_LinkedList(top,i)));
+    }
 
-    for(int i=0; i<bottomi; i++){
-        links[i+4] = (Link){bottom[i], bottom[i+1]};
-    }
-    for(int i=0; i<topi-1; i++){
-        links[i+3+bottomi] = (Link){top[i], top[i+1]};
-    }
     return links;
 }
 
@@ -207,19 +208,21 @@ int makeWindow(Polygon poly){
         XNextEvent(d, &e);
         if (e.type == Expose && e.xexpose.count==0) {
             for(int i=0; i<n; i++){
+                Point p = *(Point*)get_LinkedList(poly.points, i);
                 XFillRectangle(d, w, PolygonGC, 
-                    MARGE+poly.points[i].x - POINTWIDTH, 
-                    MARGE+poly.points[i].y - POINTWIDTH, 
-                    2*POINTWIDTH, 2*POINTWIDTH);
+                    MARGE+p.x - POINTWIDTH, 
+                    MARGE+p.y - POINTWIDTH, 
+                    2*POINTWIDTH, 2*POINTWIDTH
+                );
 
                 //char pd[2] = {i+97, '\0'};
                 //XDrawString(d, w, DefaultGC(d, s), MARGE+poly.points[i].x + 20, MARGE+poly.points[i].y + 20, pd, 1);
-            
+                Link* l = (Link*)get_LinkedList(poly.links, i);
                 XDrawLine(d, w, PolygonGC, 
-                    MARGE+poly.links[i].p1.x,
-                    MARGE+poly.links[i].p1.y,
-                    MARGE+poly.links[i].p2.x,
-                    MARGE+poly.links[i].p2.y
+                    MARGE+l->p1.x,
+                    MARGE+l->p1.y,
+                    MARGE+l->p2.x,
+                    MARGE+l->p2.y
                 );
             };
             XSetForeground(d, DefaultGC(d,s), 255<<16);
@@ -245,14 +248,14 @@ int makeWindow(Polygon poly){
 
 
 
-void toFile(Polygon poly, int n){
+/*void toFile(Polygon poly){
 
     FILE *fp;
     char* filename = "polygons.txt";
 
     fp = fopen(filename,"a+");
 
-    for(int i=0; i<n; i++){
+    for(int i=0; i<poly.sides; i++){
         fprintf(fp, "(%c)[%d, %d] -- ",
             letterFromInt(getIndex(poly.points, poly.links[i].p1, n))[0],
             poly.links[i].p1.x, poly.links[i].p1.y);
@@ -260,7 +263,7 @@ void toFile(Polygon poly, int n){
     }
     fprintf(fp, "(a)[%d, %d]\n", poly.points[0].x, poly.points[0].y);
     fclose(fp);
-}
+}*/
 
 Link* noLinks(Point* p, int n){
     Link* linksList = malloc(sizeof(Link)*n);
@@ -279,14 +282,16 @@ Link* noLinks(Point* p, int n){
 
 
 int main(void) {
-    Point* pointsList = makePoints(NPOINTS);
-    pointsList = noDubs(pointsList, NPOINTS);
+    LinkedList* pointsList = makePoints(NPOINTS);
+    printf("les puntos sont finitos \n");
+    pointsList = noDubs(pointsList);
+    printf("les puntos sont no doublos, j'en ai %i\n",pointsList->size);
     //printPoints(pointsList, NPOINTS);
 
-    Link* linksList = makeLinks(pointsList, NPOINTS);   // try to really make the link
+    LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
     //Link* linksList = noLinks(pointsList, NPOINTS);   // make dummy links to analyse the dots
-
-    Polygon poly = {pointsList, linksList, NPOINTS};
+    printf("las linkasas estas redatas\n");
+    Polygon* poly = new_Polygon(pointsList, linksList);
 
     //toFile(pointsList, linksList, NPOINTS);
 
@@ -295,7 +300,7 @@ int main(void) {
 
 
     //int isSimple = isSimplePolygon(poly);
-    makeWindow(poly);
+    makeWindow(*poly);
     return 0;
 }
 
