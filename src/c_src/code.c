@@ -237,13 +237,14 @@ void toFile(Polygon poly){
     fclose(fp);
 }
 
-Link* noLinks(Point* p, int n){
-    Link* linksList = malloc(sizeof(Link)*n);
-    for (int i=0; i<n; i++){ 
-        linksList[i].p1 = p[i];
-        linksList[i].p2 = p[i];
+LinkedList* noLinks(LinkedList* points){
+    LinkedList* links = new_LinkedList();
+    for (int i=0; i<points->size; i++){ 
+        Point* point = (Point*)get_LinkedList(points, i);
+        Link* link = new_Link(*point, *point);
+        append_LinkedList(links, link);
     }
-    return linksList;
+    return links;
 }
 
 
