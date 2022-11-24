@@ -51,9 +51,7 @@ void add_LinkedList(LinkedList* list, void* element, int idx);
  * @param list the modified list
  * @param element an element
  */
-void append_LinkedList(LinkedList* list, void* element){
-    add_LinkedList(list, element, list->size);
-}
+void append_LinkedList(LinkedList* list, void* element);
 
 /**
  * Prints the linked list using the given print function.

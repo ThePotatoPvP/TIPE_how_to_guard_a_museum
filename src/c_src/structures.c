@@ -45,6 +45,10 @@ void apply_LinkedList(LinkedList* list, void (*to_apply)(void* element)){
     }
 }
 
+void append_LinkedList(LinkedList* list, void* element){
+    add_LinkedList(list, element, list->size);
+}
+
 void add_LinkedList(LinkedList* list, void* element, int idx){
 
     if(idx < 0 || idx > list->size)
