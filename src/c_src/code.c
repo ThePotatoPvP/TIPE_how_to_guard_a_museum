@@ -51,22 +51,6 @@ char* letterFromInt(int n){
     return t;
 }
 
-void printPoint(Point p){printf("[%d, %d]", p.x, p.y);}
-
-void printPoints(Point* p, int n){
-    for(int i=0; i<n; i++){
-        printPoint(p[i]);
-        //printf("\n");
-    }
-}
-
-void printLinks(Point* p, Link* l, int n){
-    for(int i=0; i<n; i++){
-        printf("Link from [%d,%d] to [%d,%d]\n", 
-        l[i].p1.x, l[i].p1.y, l[i].p2.x, l[i].p2.y);
-    }
-}
-
 void printPath(Point* p, Link *l, int length){
     for(int i=0; i<length; i++){
         printPoint(l[i].p1);
@@ -178,33 +162,17 @@ int makeWindow(Polygon poly){
     while (1) {
         XNextEvent(d, &e);
         if (e.type == Expose && e.xexpose.count==0) {
-            for(int i=0; i<n; i++){
-                Point p = *(Point*)get_LinkedList(poly.points, i);
-                XFillRectangle(d, w, PolygonGC, 
-                    MARGE+p.x - POINTWIDTH, 
-                    MARGE+p.y - POINTWIDTH, 
-                    2*POINTWIDTH, 2*POINTWIDTH
-                );
-
-                //char pd[2] = {i+97, '\0'};
-                //XDrawString(d, w, DefaultGC(d, s), MARGE+poly.points[i].x + 20, MARGE+poly.points[i].y + 20, pd, 1);
-                Link* l = (Link*)get_LinkedList(poly.links, i);
-                XDrawLine(d, w, PolygonGC, 
-                    MARGE+l->p1.x,
-                    MARGE+l->p1.y,
-                    MARGE+l->p2.x,
-                    MARGE+l->p2.y
-                );
-            };
+            my_XDrawPolygon(d, w, PolygonGC, poly);
             XSetForeground(d, DefaultGC(d,s), 255<<16);
-            XFillRectangle(d, w, DefaultGC(d,s), MARGE+SIZE/2-POINTWIDTH, MARGE+SIZE/2-POINTWIDTH, 2*POINTWIDTH,2*POINTWIDTH);
             char* msg;
-            Point middle = {250,250};
+            Point middle = centroid(poly.points);
             if (isInside(middle,poly)){
-                msg = "Center is inside";
+                msg = "Centroid is inside";
             } else {
-                msg = "Center is outside";
+                msg = "Centroid is outside";
             }
+            my_XDrawPoint(d, w, DefaultGC(d, s), middle);
+            
             XDrawString(d, w, DefaultGC(d, s), MARGE+SIZE/3, MARGE*1.2+SIZE, msg, strlen(msg));
         }
         if (e.type == KeyPress)
@@ -217,7 +185,31 @@ int makeWindow(Polygon poly){
     return 0;
 }
 
+void my_XDrawPoint(Display* d, Window w, GC gc, Point p){
+    XFillRectangle(d, w, gc, 
+                    MARGE+p.x - POINTWIDTH, 
+                    MARGE+p.y - POINTWIDTH, 
+                    2*POINTWIDTH, 2*POINTWIDTH
+                );
+}
 
+void my_XDrawLink(Display* d, Window w, GC gc, Link l){
+    XDrawLine(d, w, gc, 
+                    MARGE+l.p1.x,
+                    MARGE+l.p1.y,
+                    MARGE+l.p2.x,
+                    MARGE+l.p2.y
+                );
+}
+
+void my_XDrawPolygon(Display *d, Window w, GC gc, Polygon poly){
+    for (int  i=0; i<poly.points->size; i++){
+        my_XDrawPoint(d, w, gc, *(Point*)get_LinkedList(poly.points, i));
+    }
+    for (int i=0; i<poly.links->size; i++){
+        my_XDrawLink(d, w, gc, *(Link*)get_LinkedList(poly.links, i));
+    }
+}
 
 void toFile(Polygon poly){
 
@@ -259,8 +251,9 @@ int main(void) {
     pointsList = noDubs(pointsList);
     //printPoints(pointsList, NPOINTS);
 
-    LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
+    //LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
     //Link* linksList = noLinks(pointsList, NPOINTS);   // make dummy links to analyse the dots
+    LinkedList* linksList = jarvis(pointsList);
     Polygon* poly = new_Polygon(pointsList, linksList);
 
     //toFile(pointsList, linksList, NPOINTS);

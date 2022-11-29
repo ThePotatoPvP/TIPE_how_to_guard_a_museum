@@ -11,11 +11,6 @@ void swap(Point* p, int i, int j);
 void sortPoints(Point* p, int n);
 char* letterFromInt(int n);
 
-void printPoint(Point p);
-void printPoints(Point* p, int n);
-
-void printLinks(Point* p, Link* l, int n);
-
 void printPath(Point* p, Link *l, int length);
 
 
@@ -34,6 +29,9 @@ LinkedList* makeLinks(LinkedList* points);
 
 int croisement(Link* l, int length);
 
+void my_XDrawPoint(Display* d, Window w, GC gc, Point p);
+void my_XDrawLink(Display* d, Window w, GC gc, Link l);
+void my_XDrawPolygon(Display *d, Window w, GC gc, Polygon poly);
 
 // Polygons Funcs
 
