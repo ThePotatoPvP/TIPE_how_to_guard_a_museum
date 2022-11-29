@@ -97,6 +97,7 @@ Node* remove_Node_LinkedList(LinkedList* list, int idx){
     if(idx == 0){
         Node* to_return = list->head;
         list->head = list->head->next;
+        list->size--;
         return to_return;
     }
 
@@ -106,6 +107,7 @@ Node* remove_Node_LinkedList(LinkedList* list, int idx){
 
     Node* to_return = tmp->next;
     tmp->next = tmp->next->next;
+    list->size--;
     return to_return;
 }
 
@@ -232,4 +234,15 @@ void* to_array_LinkedList(LinkedList* list){
         arr[i++] = node->value;
     }
     return arr;
+}
+
+bool is_mem_Nodes(Node* node, void* e){
+    if (node == NULL){
+        return false;
+    }
+    return (e == node->value)  || is_mem_Nodes(node->next, e);
+}
+
+bool is_mem_LinkedList(LinkedList* list, void* e){
+    return is_mem_Nodes(list->head, e);
 }
