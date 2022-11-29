@@ -25,6 +25,23 @@ Polygon* new_Polygon(LinkedList* points, LinkedList* links){
     return poly;
 }
 
+void printPoint(Point p){printf("[%d, %d]", p.x, p.y);}
+
+void printPoints(Point* p, int n){
+    for(int i=0; i<n; i++){
+        printPoint(p[i]);
+        //printf("\n");
+    }
+}
+
+void printLinks(Point* p, Link* l, int n){
+    for(int i=0; i<n; i++){
+        printf("Link from [%d,%d] to [%d,%d]\n", 
+        l[i].p1.x, l[i].p1.y, l[i].p2.x, l[i].p2.y);
+    }
+}
+
+
 double dst_Point(Point a, Point b){
     int delta_x = a.x - b.x;
     int delta_y = a.y - b.y;
@@ -123,20 +140,50 @@ double angle_Points(Point p1, Point p2, Point p3){
     return double_abs(a_2-a_1);
 }
 
-Point centroid(Point* points, int n){
-    int x, y;
-    int length = n;
-    for (int i=0; i<length; i++){
-        x += points[i].x;
-        y += points[i].y;
+double angle_from_axis(Point p0, Point p1){
+    return atan((double)(p1.x-p0.x)/(double)(p1.y-p0.y));
+}
+
+Point centroid(LinkedList* points){
+    int x=0, y=0;
+    for (int i=0; i<points->size; i++){
+        Point* p = get_LinkedList(points, i);
+        x += p->x;
+        y += p->y;
     }
-    return (Point){x/length, y/length};
+    return (Point){x/(points->size), y/(points->size)};
 
 }
 
-LinkedList* convex_hull_2d(Point* p){
-    LinkedList *enveloppe = new_LinkedList();
-    Point left = p[0];
-    append_LinkedList(enveloppe, &left);
+int dumbCalc(Point p1, Point p2, Point p3){
+
+}
+
+LinkedList* jarvis(LinkedList* points){
+    LinkedList *hull = new_LinkedList();
+    Point* right = get_LinkedList(points, points->size-1);
+    Point* cur = right;
+    Point* end;
+    printf("startofwhile loop\n");
+    do{
+        append_LinkedList(hull, cur);
+        Point* end = get_LinkedList(points, 0);
+        for (int j=0; j<points->size; j++){
+            Point* pj = get_LinkedList(points, j);
+            if ((end == cur) || (orientation(*cur, *end, *pj)==1)){
+                end = pj;
+            }
+        }
+        cur = end;
+    } while (!(__equal_Points__(*end, *right)));
+    printf("done with while loop\n");
+    LinkedList* enveloppe = new_LinkedList();
+    printf("debut de la boucle for 2\n");
+    for (int i=0; i<hull->size; i++){
+        printf("building link %i\n",i);
+        Link* newLink = new_Link(*(Point*)get_LinkedList(hull, i), 
+                                *(Point*)get_LinkedList(hull, (i+1)%(hull->size)));
+        append_LinkedList(enveloppe, newLink);
+    }
     return enveloppe;
 }

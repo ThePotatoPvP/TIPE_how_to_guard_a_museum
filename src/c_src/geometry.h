@@ -27,6 +27,12 @@ Point* new_Point(int x, int y);
 Link* new_Link(Point p1, Point p2);
 Polygon* new_Polygon(LinkedList* points, LinkedList* links);
 
+
+void printPoint(Point p);
+void printPoints(Point* p, int n);
+
+void printLinks(Point* p, Link* l, int n);
+
 /**
  * Returns true if the two points have the same coordinates, false otherwise
  * @param p1 a Point
@@ -76,7 +82,7 @@ double angle_Points(Point p1, Point p2, Point p3);
 
 int isSimplePolygon(Polygon poly);
 
-Point centroid(Point* points, int n);
-
+Point centroid(LinkedList* points);
+LinkedList* jarvis(LinkedList* points);
 
 #endif
