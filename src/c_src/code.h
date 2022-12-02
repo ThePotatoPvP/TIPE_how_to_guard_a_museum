@@ -35,7 +35,7 @@ void my_XDrawPolygon(Display *d, Window w, GC gc, Polygon poly);
 
 // Polygons Funcs
 
-void toFile(Polygon poly);
+void to_file_Polygon(Polygon* poly, char* filename);
 Polygon* fromFile(void);
 
 
