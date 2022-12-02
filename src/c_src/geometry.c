@@ -167,7 +167,7 @@ LinkedList* jarvis(LinkedList* points){
     printf("startofwhile loop\n");
     do{
         append_LinkedList(hull, cur);
-        Point* end = get_LinkedList(points, 0);
+        end = get_LinkedList(points, 0);
         for (int j=0; j<points->size; j++){
             Point* pj = get_LinkedList(points, j);
             if ((end == cur) || (orientation(*cur, *end, *pj)==1)){
