@@ -77,6 +77,10 @@ int has_common_Point(Link l1, Link l2){
             __equal_Points__(l1.p2, l2.p2));
 }
 
+int Points_on_Link(Point p, Link l){
+    return (__equal_Points__(p,l.p1) || __equal_Points__(p,l.p2))
+}
+
 Link reversed_Link(Link l){
     return (Link){l.p2, l.p1};
 }
@@ -176,14 +180,68 @@ LinkedList* jarvis(LinkedList* points){
         }
         cur = end;
     } while (!(__equal_Points__(*end, *right)));
-    printf("done with while loop\n");
     LinkedList* enveloppe = new_LinkedList();
-    printf("debut de la boucle for 2\n");
     for (int i=0; i<hull->size; i++){
         printf("building link %i\n",i);
         Link* newLink = new_Link(*(Point*)get_LinkedList(hull, i), 
                                 *(Point*)get_LinkedList(hull, (i+1)%(hull->size)));
         append_LinkedList(enveloppe, newLink);
     }
+    LinkedList* jarvis = new_LinkedList();
+    append_LinkedList(jarvis, hull);
+    append_LinkedList(jarvis, enveloppe);
     return enveloppe;
+}
+
+Link** cut_Link(Link l, Point p){
+    Link** links = malloc(sizeof(Link*)*2);
+    links[0] = new_Link(l.p1, p);
+    links[1] = new_Link(l.p2, p);
+    return links;
+}
+
+Link* closest_Link_from_Point(LinkedList* links, Point p){
+    Link* lmin = get_LinkedList(links->size-1);
+    double dmin = dst_Point_Link(p, *lmin);
+    Link* cur;
+    double d;
+    for (int i=0; i<links->size-2; i++){
+        cur = get_LinkedList(links, i);
+        d = dst_Point_Link(p, *cur);
+        if (d<dmin){
+            lmin = cur;
+            dmin =d;
+        }
+    }
+    free(cur);
+    return lmin;
+}
+
+LinkedList* make_polygon_from_Jarvis(LinkedList* jarvis, LinkedList* points){
+    LinkedList* hull = get_LinkedList(jarvis, 0);
+    LinkedList* enveloppe = get_LinkedList(jarvis, 1);
+    LinkedList* inside_Points = new_LinkedList();
+    Point* pi;
+    Link* li;
+    for (int i=0; i<points->size; i++){
+        pi = get_LinkedList(points, i);
+        if (!(is_mem_LinkedList(hull, pi))){
+            append_LinkedList(inside_Points, pi);
+        }
+    }
+    if (!(is_empty_LinkedList(inside_Points))){
+        Point* pfirst = pop_LinkedList(inside_Points);
+        Link* lfirst = pop_LinkedList(enveloppe);
+        Link** cutted = cut_Link(*lfirst, *pfirst);
+        append_LinkedList(enveloppe, cutted[0]);
+        append_LinkedList(enveloppe, cutted[1]);
+        free(cutted);
+        free(lfirst);
+    }
+    while (!(is_empty_LinkedList(inside_Points))){
+        pi = pop_LinkedList(inside_Points);
+        li = closest_Link_from_Point(enveloppe, pi):
+        
+    }
+    
 }

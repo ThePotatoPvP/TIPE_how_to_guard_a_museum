@@ -251,9 +251,9 @@ int main(void) {
     pointsList = noDubs(pointsList);
     //printPoints(pointsList, NPOINTS);
 
-    //LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
+    LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
     //Link* linksList = noLinks(pointsList, NPOINTS);   // make dummy links to analyse the dots
-    LinkedList* linksList = jarvis(pointsList);
+    //LinkedList* linksList = jarvis(pointsList);
     Polygon* poly = new_Polygon(pointsList, linksList);
 
     //toFile(pointsList, linksList, NPOINTS);
