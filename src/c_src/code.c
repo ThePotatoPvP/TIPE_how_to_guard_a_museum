@@ -211,22 +211,77 @@ void my_XDrawPolygon(Display *d, Window w, GC gc, Polygon poly){
     }
 }
 
-void toFile(Polygon poly){
-
+void Polygon_to_file(Polygon* poly, char* filename){
     FILE *fp;
-    char* filename = "polygons.txt";
-
-    fp = fopen(filename,"a+");
-
-    for(int i=0; i<poly.sides; i++){
-        Link cur = *(Link*)get_LinkedList(poly.links, i);
-        fprintf(fp, "[%d, %d] -- ",
-            cur.p1.x, cur.p1.y);
-        
+    fp = fopen(filename,"w+");
+    int i=0;
+    for(Node* node = poly->links->head; i++ < poly->links->size - 1; node = node->next){
+        Link* link = node->value;
+        char* x = as_str_Rational(int_to_Rational(link->p1.x));
+        char* y = as_str_Rational(int_to_Rational(link->p1.y));
+        fprintf(fp, "{%s,%s}", x, y);
+        free(x);
+        free(y);
     }
-    Point start = *(Point*)get_LinkedList(poly.points, 0);
-    fprintf(fp, "[%d, %d]\n", start.x, start.y);
     fclose(fp);
+}
+
+Polygon* file_to_Polygon(char* filename){
+    FILE *fp = fopen(filename,"r");
+    char buffer[100];
+
+    int i = 0;
+
+    Polygon* polygon = new_Polygon(new_LinkedList(), new_LinkedList());
+
+    while(!feof(fp)){
+        char c = fgetc(fp);
+        Rational x;
+        Rational y;
+        if (c == '{'){
+            c = fgetc(fp);
+            while(c != ','){
+                buffer[i++] = c;
+                c = fgetc(fp);
+            }
+            buffer[i++] = '\0';
+            x = str_to_Rational(buffer);
+            buffer[i] = '0';
+            i = 0;
+            c = fgetc(fp);
+            while(c != '}'){
+                buffer[i++] = c;
+                c = fgetc(fp);
+            }
+            buffer[i++] = '\0';
+            y = str_to_Rational(buffer);
+            buffer[i] = '\0';
+            i = 0;
+        }
+        Point* point = malloc(sizeof(Point));
+        point->x = Rational_to_int(x);
+        point->y = Rational_to_int(y);
+
+        if(!is_empty_LinkedList(polygon->points)){
+
+            Link* link = malloc(sizeof(Link));
+            link->p1 = *(Point*)polygon->points->tail->value;
+            link->p2 = *point;
+
+            append_LinkedList(polygon->links, link);
+            polygon->sides++;
+        }
+
+        append_LinkedList(polygon->points, point);
+    }
+
+    if(polygon->points->size >= 2){
+        Link* last = malloc(sizeof(Link));
+        last->p1 = *(Point*)polygon->points->tail->value;
+        last->p2 = *(Point*)polygon->points->head->value;
+        append_LinkedList(polygon->links, last);
+    }
+    return polygon;
 }
 
 LinkedList* noLinks(LinkedList* points){
@@ -238,13 +293,6 @@ LinkedList* noLinks(LinkedList* points){
     }
     return links;
 }
-
-
-///
-// main()
-///
-
-
 
 int main(void) {
     LinkedList* pointsList = makePoints(NPOINTS);

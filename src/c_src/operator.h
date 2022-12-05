@@ -58,4 +58,11 @@ double as_double_Rational(Rational);
 
 void print_Rational(Rational);
 
+char* as_str_Rational(Rational);
+
+Rational str_to_Rational(char*);
+
+Rational int_to_Rational(int);
+
+int Rational_to_int(Rational);
 #endif
