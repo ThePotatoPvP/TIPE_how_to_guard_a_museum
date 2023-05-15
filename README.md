@@ -27,7 +27,7 @@ On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppo
 2. Parcours de Graham et grignottage
     - On commence par cherche l'eveloppe convexe du nuage de points
     - On prend ensuite un point intérieur avec lequel on brise l'enveloppe convexe obtenu, celà ne crée pas de segments séquents par convexité de l'enveloppe.
-    - La forme obtenu n'étant plus convexe, pour chaque  point on cherche le segment le plus proche et on découpe ce segment en deux pour inclure le point en question dans les sommets. 
+    - La forme obtenu n'étant plus convexe, pour chaque  point on cherche le segment le plus proche et on découpe ce segment en deux pour inclure le point en question dans les sommets.
     > Sur l'exemple ci dessus, on pourrait obtenir le même résultat qu'avec l'autre méthode.
 
 
@@ -36,6 +36,28 @@ On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppo
 I -
 > - présentation du problème global
 > - approche théorique (complexité)
+
+1. On commence par montrer que le problème est dans NP
+
+    - On commence par remarquer qu'une solution est un ensemble de sommets du polygone et est donc bien de taille polynomiale. Montrons maintenant que la vérification se fait en temps polynomial.
+
+    - <b>Lemme</b> : Si un garde voit les deux extrémités d'un segment alors il voit l'entièreté du segment. Ce résultat s'obtient du fait qu'un triangle est convexe.
+
+    - Le calcul de la zone visible par un garde donné se fait en temps polinômial et forme des polygones, on peut ensuite construire l'union toujours en temps polynomial puis vérifier l'égalité entre le polygone obtenu et celui de départ. On a ainsi bien que le problème est dans NP.
+
+
+2. Montrons ensuite que le problème est NP-Complet
+
+    - On va ici montrer que le problème 3-SAT se réduit à notre problème. Pour cela on commence par considérer une clause de 3-SAT de la forme $(x_1\lor x_2\lor x_3)$ avec les $x_i$ des litéraux.
+
+    ![image](./src/resources/VGSP_schemas.png)
+
+    - En limitant le nombre de gardes maximum on a bien que chaque clause doit être vraie pour que le schéma de clause soit couvert par les gardes. On peut ainsi placer les  clauses côte à côte en autorisant 3 gardes par clause, si le placement des gardes en retour contient assez peu de gardes alors la formule est vérifiable. Reste à s'assurer qu'une même variable a bien la même valuation dans chaque clause. On construit alors la structure ci-dessous pour chaque variable
+
+    - En alignant correctement les clauses et en ajoutant des creux comme $x$ et $x'$ pour chaque occurence de la variable. On a alors un polygone tel que si toutes les occurences de la variable ont la même valeur alors tous les creux d'une colonnes sont observés et tous ceux de l'autre non, on place donc un garde sur l'un des points rouges.
+
+    - En limitant le nombre de gardes au triple du nombre de clause plus le nombre de variables distinctes on a bien que le polygone est recouvert si et seulement si la formule est satisifable. On a finalement que le problème est dans NP car il se réduit en temps polynomial à 3-SAT.
+
 > - tentative de génération de polygones pour aborder le problème de façon globale -> on y arrive pas
 
 II -
@@ -47,3 +69,4 @@ III -
 > - Recherche d'algorithmes optimaux (insérer noms d'algos)
 > - Implémentation et recherche duquel est le meilleur sur notre sample de polygones
 > - on rajoute n-2 dimension
+
