@@ -29,3 +29,21 @@ On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppo
     - On prend ensuite un point intérieur avec lequel on brise l'enveloppe convexe obtenu, celà ne crée pas de segments séquents par convexité de l'enveloppe.
     - La forme obtenu n'étant plus convexe, pour chaque  point on cherche le segment le plus proche et on découpe ce segment en deux pour inclure le point en question dans les sommets. 
     > Sur l'exemple ci dessus, on pourrait obtenir le même résultat qu'avec l'autre méthode.
+
+
+# Plan de présentation
+
+I -
+> - présentation du problème global
+> - approche théorique (complexité)
+> - tentative de génération de polygones pour aborder le problème de façon globale -> on y arrive pas
+
+II -
+> -  idée de tester tous les algos sur le mm set de polygones
+> - présentations d'idées d'algos cons pour poser des cams -> pas opti
+> - recherche d'algos avec des outils au programme (prog dynamique, memoisation, ..)
+
+III -
+> - Recherche d'algorithmes optimaux (insérer noms d'algos)
+> - Implémentation et recherche duquel est le meilleur sur notre sample de polygones
+> - on rajoute n-2 dimension
