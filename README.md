@@ -60,6 +60,58 @@ I -
 
 > - tentative de génération de polygones pour aborder le problème de façon globale -> on y arrive pas
 
+## Sur la génération de polygones
+
+La galerie d'art étant représentée par un polygone il est bon de s'intéresser à leur génération. Plusieurs formes de génération
+existent. On peut en faire d'autant de façons que l'esprit humain c'est en trouver. Cette question étant largement trop vaste
+pour être intérrogée, on va partir d'une idée de base et la développer:
+
+- L'arborescence à partir d'une structure de base
+
+> - Partir d'un polygone choisi arbitrairement à k côtés. 
+> - Sur chaque côté choisir aléatoirement si elle doit être "développée"
+> - Si il y a developpement: créer un nouveau polygone avec un côté commun au précédent
+> - Répéter sur l'entiereté de la structure un nombre aléatoire de fois
+
+
+_Le problème est que pour une structure de base choisit les figures seront relativement similaire.
+On étudierait alors le problème de la galerie d'art sur un ensemble de figures qui se ressemblent._
+
+- Création direct d'un polygone
+
+> - On choisit sur le plan n points
+> - On crée son enveloppe convexe par l'algorithme de Graham
+
+On a alors deux ensembles de points, celui de l'enveloppe convexe et les points intérieurs.
+
+> - Pour chaque point intérieur on brise l'enveloppe convexe pour créer deux nouveaux segments dans la figure finale
+> - Répéter sans créer de segments qui intersecte la figure
+
+_Il est difficile de savoir à l'avance le nombre de points de la figure convexe et donc de celle finale._
+
+
+Cependant, on peut étudier une propriété qu'on tout les polygones. C'est le fait d'être triangulisable.
+Ainsi en partant d'une structure de base qui est un triangle (donc trois points pris aléatoirement sur le plan) et
+en utilisant la technique de l'arborescence on pourrait avoir un bon ensemble de polygone.
+
+
+Voyons désormais les couts techniques de telles algorithmes.
+
+L'arboresence demande une chose:
+
+   - vérifier à chaque étape que l'ajout d'un point ne brise pas un polygone (côté qui s'intersecte) en O((i)²) où i est l'étape 
+
+Ainsi la création est en O(n²) où n est le nombre de sommets de la figure finale.
+
+La création direct avec l'algorithme de Graham demande:
+
+   - trier une liste de points en fonction d'un angle donc en O(n*ln(n))
+
+Ainsi la création est en O(n*ln(n)) où n est le nombre de points choisis au départ (et non le nombre de sommet du polygone final).
+
+On peut alors faire un mélange des deux méthodes, et pour des figures de tailles petites on peut utiliser l'arborescence
+et on pour des figures de plus grandes tailles utiliser la création directe.
+
 II -
 > -  idée de tester tous les algos sur le mm set de polygones
 > - présentations d'idées d'algos cons pour poser des cams -> pas opti
