@@ -26,6 +26,7 @@ int min(int n, int m);
 Point* new_Point(int x, int y);
 Link* new_Link(Point p1, Point p2);
 Polygon* new_Polygon(LinkedList* points, LinkedList* links);
+Polygon* createPolygon(Point* pointList, int length);
 
 /**
  * Returns true if the two points have the same coordinates, false otherwise

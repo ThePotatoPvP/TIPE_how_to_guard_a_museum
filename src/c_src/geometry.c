@@ -25,6 +25,29 @@ Polygon* new_Polygon(LinkedList* points, LinkedList* links){
     return poly;
 }
 
+Polygon* createPolygon(Point* pointList, int length) {
+    LinkedList* pointsList = new_LinkedList();
+    LinkedList* linksList = new_LinkedList();
+
+    for (int i = 0; i < length; i++) {
+        Point* newPoint = new_Point(pointList[i].x, pointList[i].y);
+        append_LinkedList(pointsList, newPoint);
+
+        Point* currentPoint = (Point*)get_LinkedList(pointsList, i);
+        Point* nextPoint = (Point*)get_LinkedList(pointsList, (i + 1) % length);
+
+        Link* newLink = new_Link(*currentPoint, *nextPoint);
+        append_LinkedList(linksList, newLink);
+    }
+
+    Polygon* polygon = new_Polygon(pointsList, linksList);
+    polygon->sides = length;
+
+    free(pointList); // Free the pointList
+
+    return polygon;
+}
+
 double dst_Point(Point a, Point b){
     int delta_x = a.x - b.x;
     int delta_y = a.y - b.y;
