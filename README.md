@@ -124,11 +124,18 @@ II -
 # Optimisation et observations
 
 ## Recherche d'algorithmes optimaux
-- Krohn & Nilsson (2013)
-> Utilisation de la logique diviser pour régner le polygone se découpe récursivement jusqu'à être convexe et donc simple à traiter. Bien que non optimal cet algorithme est dans le cas général bien meilleur que la brute-force
-- Bhattacharya, Ghosh & Roy (2017)
-- Couto, de Rezende & de Souza (2011)
+- Krohn & Nilsson
+    - Utilisation de la logique diviser pour régner
+    - Le polygone se découpe récursivement jusqu'à être convexe et donc simple à traiter. Bien que non optimal cet algorithme est dans le cas général bien meilleur que la brute-force
+- Bhattacharya, Ghosh & Roy
+    - On considère un point du plan comme référence et on les trie selon l'angle formé avec l'origine et le point de référence. On place un garde sur le premier point puis on parcours ensuite les sommets dans l'ordre
+    - Si l'angle entre le sommet, le précédent et le point de référence est de plus de 180° on place un garde et le sommet actuel devient le point de référence.
+    - Sinon le sommet précédent devient le point de référence
+    - En plaçant un garde sur chaque sommet où l'angle est inférieur à 180 degrés, on peut garantir que tous les points du polygone seront surveillés.
+- Couto, de Rezende & de Souza
+    - On trie les sommets comlme au dessus et les parcours de la même façon
+    - On cherche le prochain sommet non surveillé (en traçant des droites avec les gardes et regardant les intersections) et on place un garde au sommet précédent ce dernier.
 
-> - Implémentation et recherche duquel est le meilleur sur notre sample de polygones
-> - on rajoute n-2 dimension
+## Implémentation et recherche duquel est le meilleur sur notre sample de polygones
+## On rajoute n-2 dimension
 
