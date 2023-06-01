@@ -133,7 +133,7 @@ II -
     - Sinon le sommet précédent devient le point de référence
     - En plaçant un garde sur chaque sommet où l'angle est inférieur à 180 degrés, on peut garantir que tous les points du polygone seront surveillés.
 - Couto, de Rezende & de Souza
-    - On trie les sommets comlme au dessus et les parcours de la même façon
+    - On trie les sommets comme au dessus et les parcours de la même façon
     - On cherche le prochain sommet non surveillé (en traçant des droites avec les gardes et regardant les intersections) et on place un garde au sommet précédent ce dernier.
 
 ## Implémentation et recherche duquel est le meilleur sur notre sample de polygones
