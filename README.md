@@ -54,6 +54,8 @@ I -
 
     - En limitant le nombre de gardes maximum on a bien que chaque clause doit être vraie pour que le schéma de clause soit couvert par les gardes. On peut ainsi placer les  clauses côte à côte en autorisant 3 gardes par clause, si le placement des gardes en retour contient assez peu de gardes alors la formule est vérifiable. Reste à s'assurer qu'une même variable a bien la même valuation dans chaque clause. On construit alors la structure ci-dessous pour chaque variable
 
+    ![image](./src/resources/UNICITY_valuate.png)
+
     - En alignant correctement les clauses et en ajoutant des creux comme $x$ et $x'$ pour chaque occurence de la variable. On a alors un polygone tel que si toutes les occurences de la variable ont la même valeur alors tous les creux d'une colonnes sont observés et tous ceux de l'autre non, on place donc un garde sur l'un des points rouges.
 
     - En limitant le nombre de gardes au triple du nombre de clause plus le nombre de variables distinctes on a bien que le polygone est recouvert si et seulement si la formule est satisifable. On a finalement que le problème est dans NP car il se réduit en temps polynomial à 3-SAT.
@@ -68,7 +70,7 @@ pour être intérrogée, on va partir d'une idée de base et la développer:
 
 - L'arborescence à partir d'une structure de base
 
-> - Partir d'un polygone choisi arbitrairement à k côtés. 
+> - Partir d'un polygone choisi arbitrairement à k côtés.
 > - Sur chaque côté choisir aléatoirement si elle doit être "développée"
 > - Si il y a developpement: créer un nouveau polygone avec un côté commun au précédent
 > - Répéter sur l'entiereté de la structure un nombre aléatoire de fois
@@ -99,7 +101,7 @@ Voyons désormais les couts techniques de telles algorithmes.
 
 L'arboresence demande une chose:
 
-   - vérifier à chaque étape que l'ajout d'un point ne brise pas un polygone (côté qui s'intersecte) en O((i)²) où i est l'étape 
+   - vérifier à chaque étape que l'ajout d'un point ne brise pas un polygone (côté qui s'intersecte) en O((i)²) où i est l'étape
 
 Ainsi la création est en O(n²) où n est le nombre de sommets de la figure finale.
 
