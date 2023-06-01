@@ -2,3 +2,9 @@
 cmake-build-debug
 TIPE.pdf
 .vscode
+tipe
+Makefile
+cmake_install.cmake
+compile_commands.json
+CMakeFiles
+CMakeCache.txt
