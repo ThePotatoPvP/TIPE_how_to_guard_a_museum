@@ -18,7 +18,7 @@
 // Prints def
 ///
 
- 
+
 
 int isInside(Point p, Polygon poly){
     int myBool = 0;
@@ -180,16 +180,16 @@ int makeWindow(Polygon poly){
         if (e.type == Expose && e.xexpose.count==0) {
             for(int i=0; i<n; i++){
                 Point p = *(Point*)get_LinkedList(poly.points, i);
-                XFillRectangle(d, w, PolygonGC, 
-                    MARGE+p.x - POINTWIDTH, 
-                    MARGE+p.y - POINTWIDTH, 
+                XFillRectangle(d, w, PolygonGC,
+                    MARGE+p.x - POINTWIDTH,
+                    MARGE+p.y - POINTWIDTH,
                     2*POINTWIDTH, 2*POINTWIDTH
                 );
 
                 //char pd[2] = {i+97, '\0'};
                 //XDrawString(d, w, DefaultGC(d, s), MARGE+poly.points[i].x + 20, MARGE+poly.points[i].y + 20, pd, 1);
                 Link* l = (Link*)get_LinkedList(poly.links, i);
-                XDrawLine(d, w, PolygonGC, 
+                XDrawLine(d, w, PolygonGC,
                     MARGE+l->p1.x,
                     MARGE+l->p1.y,
                     MARGE+l->p2.x,
@@ -230,7 +230,7 @@ void toFile(Polygon poly){
         Link cur = *(Link*)get_LinkedList(poly.links, i);
         fprintf(fp, "[%d, %d] -- ",
             cur.p1.x, cur.p1.y);
-        
+
     }
     Point start = *(Point*)get_LinkedList(poly.points, 0);
     fprintf(fp, "[%d, %d]\n", start.x, start.y);
@@ -239,7 +239,7 @@ void toFile(Polygon poly){
 
 LinkedList* noLinks(LinkedList* points){
     LinkedList* links = new_LinkedList();
-    for (int i=0; i<points->size; i++){ 
+    for (int i=0; i<points->size; i++){
         Point* point = (Point*)get_LinkedList(points, i);
         Link* link = new_Link(*point, *point);
         append_LinkedList(links, link);

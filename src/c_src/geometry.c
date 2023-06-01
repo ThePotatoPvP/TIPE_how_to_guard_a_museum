@@ -19,7 +19,7 @@ Link* new_Link(Point p1, Point p2){
 
 Polygon* new_Polygon(LinkedList* points, LinkedList* links){
     Polygon* poly = (Polygon*)malloc(sizeof(poly));
-    poly->points = points; 
+    poly->points = points;
     poly->links = links;
     poly->sides = links->size;
     return poly;
