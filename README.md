@@ -33,16 +33,17 @@ On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppo
 
 # I - Structure du problème
 
-# Plan de présentation
+## Présentation du problème global, lien avec le thème
 
-> - présentation du problème global
-> - approche théorique (complexité)
+On s'interesse dans ce projet au problème soulevé par V.Klee en 1973. On suppose un musée et on se demande combien de gardes immobiles sont nécessaires afin de le surveiller. On prendra ainsi des polygones simples, donc la forme peut être quelconque.
+
+La sécurité est une contrainte majeure dans les grandes villes de nos jours, un algorithme pouvant résoudre notre problème permettrait alors d'optimiser le placement de caméras de sécurité. Cela permettrait de limiter les coûts et infrastructures tout en assurant une surveillance permanente de tous les quartiers.
+
+## Approche théorique (complexité)
 
 1. On commence par montrer que le problème est dans NP
 
     - On commence par remarquer qu'une solution est un ensemble de sommets du polygone et est donc bien de taille polynomiale. Montrons maintenant que la vérification se fait en temps polynomial.
-
-    - <b>Lemme</b> : Si un garde voit les deux extrémités d'un segment alors il voit l'entièreté du segment. Ce résultat s'obtient du fait qu'un triangle est convexe.
 
     - Le calcul de la zone visible par un garde donné se fait en temps polinômial et forme des polygones, on peut ensuite construire l'union toujours en temps polynomial puis vérifier l'égalité entre le polygone obtenu et celui de départ. On a ainsi bien que le problème est dans NP.
 
