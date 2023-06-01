@@ -62,7 +62,7 @@ void printPoints(Point* p, int n){
 
 void printLinks(Point* p, Link* l, int n){
     for(int i=0; i<n; i++){
-        printf("Link from [%d,%d] to [%d,%d]\n", 
+        printf("Link from [%d,%d] to [%d,%d]\n",
         l[i].p1.x, l[i].p1.y, l[i].p2.x, l[i].p2.y);
     }
 }
@@ -114,7 +114,7 @@ LinkedList* makePoints(int n){
     srand(time(NULL));
     LinkedList* points = new_LinkedList();
     for(int i=0; i<n; i++){
-        Point* filler = new_Point(rand() % (SIZE+1), rand() % (SIZE+1)); 
+        Point* filler = new_Point(rand() % (SIZE+1), rand() % (SIZE+1));
         append_LinkedList(points, filler);
     }
     return points;
@@ -252,16 +252,36 @@ LinkedList* noLinks(LinkedList* points){
 // main()
 ///
 
+Polygon* createExample1() {
+    Point pointList[4] = {
+        {0, 0},
+        {0, 100},
+        {200, 100},
+        {200, 0}
+    };
 
+    Polygon* rectangle = createPolygon(pointList, 4);
+
+    return rectangle;
+}
+
+Polygon* createExample2() {
+    Point pointList[] = {
+        {100, 100}, {200, 100}, {200, 200}, {300, 200}, {300, 300}, {200, 300},
+        {200, 400}, {300, 400}, {300, 500}, {200, 500}, {200, 600}, {100, 600}
+    };
+    return createPolygon(pointList, 12);
+}
 
 int main(void) {
-    LinkedList* pointsList = makePoints(NPOINTS);
-    pointsList = noDubs(pointsList);
+    //LinkedList* pointsList = makePoints(NPOINTS);
+    //pointsList = noDubs(pointsList);
     //printPoints(pointsList, NPOINTS);
 
-    LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
+    //LinkedList* linksList = makeLinks(pointsList);   // try to really make the link
     //Link* linksList = noLinks(pointsList, NPOINTS);   // make dummy links to analyse the dots
-    Polygon* poly = new_Polygon(pointsList, linksList);
+    //Polygon* poly = new_Polygon(pointsList, linksList);
+    Polygon* poly = createExample3();
 
     //toFile(pointsList, linksList, NPOINTS);
 
