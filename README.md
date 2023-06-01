@@ -32,8 +32,6 @@ La sécurité est une contrainte majeure dans les grandes villes de nos jours, u
 
     - En limitant le nombre de gardes au triple du nombre de clause plus le nombre de variables distinctes on a bien que le polygone est recouvert si et seulement si la formule est satisifable. On a finalement que le problème est dans NP car il se réduit en temps polynomial à 3-SAT.
 
-> - tentative de génération de polygones pour aborder le problème de façon globale → on y arrive pas
-
 ## Sur la génération de polygones
 
 La galerie d'art étant représentée par un polygone, il est bon de s'intéresser à leur génération. Plusieurs formes de génération
@@ -93,7 +91,7 @@ et ont pour des figures de plus grandes tailles utiliser la création directe.
 Comme nous l'avons vu, la génération des polygones force un cadre de résolution, chaque polygone généré de la même façon
 se ressemblant.
 
-Ainsi si on trouve un algorithme performant, c'est-à-dire non pas à la compléxité la plus faible, mais au temps 
+Ainsi si on trouve un algorithme performant, c'est-à-dire non pas à la compléxité la plus faible, mais au temps
 de calcul sur un ordinateur le plus faible, alors on pourra conclure sur l'algorithme d'une part et sur l'ensemble
 de polygones d'autre part.
 
@@ -101,10 +99,10 @@ On va donc dans un premier temps se fixer dans un cadre avec un ensemble prédé
 
 ## Sur les implémentations d'algorithmes
 
-Ce problème étant NP-complet, ses solutions seraient tous de complexité exponentielle ou plus, alors 
+Ce problème étant NP-complet, ses solutions seraient tous de complexité exponentielle ou plus, alors
 pour pouvoir les tester, on sera obligé de prendre des polygones avec un nombre faible de côtés.
 
-Dans ce cas-là, l'étude asymptotique ne serait qu'un faible indicateur de performance étant donné que la 
+Dans ce cas-là, l'étude asymptotique ne serait qu'un faible indicateur de performance étant donné que la
 constante devant rentrera largement en jeu.
 
 
@@ -118,10 +116,9 @@ L'autre algorithme, aussi naïve, est celui qui parcourt linéairement tous les 
 
 ## De meilleures implémentations
 
-II -
 > - recherche d'algos avec des outils au programme (backtracking par exemple)
 
-# Optimisation et observations
+# III - Optimisation et observations
 
 ## Recherche d'algorithmes optimaux
 - Krohn & Nilsson
@@ -137,5 +134,6 @@ II -
     - On cherche le prochain sommet non surveillé (en traçant des droites avec les gardes et regardant les intersections) et on place un garde au sommet précédent ce dernier.
 
 ## Implémentation et recherche duquel est le meilleur sur notre sample de polygones
-## On rajoute n-2 dimension
+
+(en cours)
 
